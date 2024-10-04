@@ -3,13 +3,25 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-console.log('Welcome to Holberton School, what is your name?');
-
-rl.question('', (name) => {
-  console.log(`Your name is: ${name}`);
-  rl.close();
-});
+if (process.stdin.isTTY) {
+  console.log('Welcome to Holberton School, what is your name?');
+  rl.question('', (name) => {
+    console.log(`Your name is: ${name}`);
+    rl.close();
+  });
+} else {
+  let input = '';
+  process.stdin.on('data', (data) => {
+    input += data;
+  });
+  process.stdin.on('end', () => {
+    console.log('Welcome to Holberton School, what is your name?');
+    console.log(`Your name is: ${input.trim()}`);
+    console.log('This important software is now closing');
+  });
+}
 rl.on('close', () => {
-  console.log('This important software is now closing');
-  process.exit(0);
+  if (process.stdin.isTTY) {
+    console.log('This important software is now closing');
+  }
 });
